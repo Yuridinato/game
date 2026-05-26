@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial Game</title>
+  <!-- Importação de Fontes do Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <!-- Link para a Folha de Estilos -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Recipiente para os efeitos de partículas -->
+  <div class="particle-container" id="particles"></div>
+
+  <!-- TELA INICIAL (HOME) -->
+  <div id="screen-home" class="screen active">
+    <div class="home-logo anim-in">TUTORIAL<br>GAME</div>
+    <div class="home-sub" style="animation: fadeInUp 0.5s 0.1s ease both; opacity: 0; animation-fill-mode: forwards;">Jogo Educativo Interativo</div>
+    <div class="home-card" style="animation: fadeInUp 0.5s 0.2s ease both; opacity: 0; animation-fill-mode: forwards;">
+      <div class="home-section-label">Quantidade de grupos</div>
+      <div class="group-count-row">
+        <button class="count-btn" onclick="changeGroups(-1)">−</button>
+        <div class="count-num" id="cnt-num">3</div>
+        <button class="count-btn" onclick="changeGroups(1)">+</button>
+      </div>
+      <div class="home-section-label">Nome dos grupos</div>
+      <div class="group-inputs" id="group-inputs"></div>
+      <button class="btn-start" onclick="startGame()">▶ Iniciar Jogo</button>
+      <button class="btn-rules" onclick="goScreen('rules')">📋 Ver Regras</button>
+    </div>
+  </div>
+
+  <!-- TELA DE REGRAS -->
+  <div id="screen-rules" class="screen">
+    <div class="rules-card anim-in">
+      <div class="rules-title">📖 Regras do Jogo</div>
+      <div class="rule-item"><div class="rule-num">1</div><span>O tabuleiro possui <strong>12 casas ocultas</strong>: 10 perguntas, 1 bônus (+2 pts) e 1 bomba (−2 pts).</span></div>
+      <div class="rule-item"><div class="rule-num">2</div><span>Cada grupo escolhe uma casa por turno. O conteúdo só é revelado após o clique.</span></div>
+      <div class="rule-item"><div class="rule-num">3</div><span>Resposta <strong>correta</strong>: +1 ponto. Resposta <strong>errada</strong>: −1 ponto.</span></div>
+      <div class="rule-item"><div class="rule-num">4</div><span>O grupo tem <strong>30 segundos</strong> para responder. Tempo esgotado = o próximo grupo ganha o direito de responder a mesma questão.</span></div>
+      <div class="rule-item"><div class="rule-num">5</div><span>Casa bônus: <strong>+2 pts</strong> direto. Casa bomba: <strong>−2 pts</strong> direto. Sem pergunta.</span></div>
+      <div class="rule-item"><div class="rule-num">6</div><span>Vence o grupo com <strong>maior pontuação</strong> ao final. Em caso de empate, conta maior nº de acertos.</span></div>
+      <div class="rule-item"><div class="rule-num">7</div><span>1º lugar: +1 pt extra | 2º: +0,75 | 3º: +0,50 | demais: +0,25 pt extra.</span></div>
+      <div class="rules-btns">
+        <button class="btn-back" onclick="goScreen('home')">← Voltar</button>
+        <button class="btn-go" onclick="goScreen('home')">Entendido! ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DO TABULEIRO (BOARD) -->
+  <div id="screen-board" class="screen">
+    <div class="board-topbar">
+      <div class="board-logo">TG</div>
+      <div class="score-chips" id="score-chips"></div>
+      <button class="btn-rank" onclick="goScreen('ranking')">🏆 Ranking</button>
+    </div>
+    <div class="board-main">
+      <div class="turn-banner" id="turn-banner">
+        <div class="turn-dot" id="turn-dot"></div>
+        <div>
+          <div class="turn-label">Vez de</div>
+          <div class="turn-name" id="turn-name">—</div>
+        </div>
+        <div class="turn-hint">Escolha uma casa ↓</div>
+      </div>
+      <div class="board-grid" id="board-grid"></div>
+    </div>
+  </div>
+
+  <!-- TELA DE PERGUNTAS (QUESTION) -->
+  <div id="screen-question" class="screen">
+    <div class="question-topbar">
+      <div class="qtop-group">
+        <div class="qtop-dot" id="q-dot"></div>
+        <div class="qtop-name" id="q-group-name">Grupo</div>
+      </div>
+      <div class="qtop-badge" id="q-type-badge">Objetiva</div>
+      <div class="timer-wrap">
+        <div class="timer-circle">
+          <svg viewBox="0 0 46 46" width="46" height="46">
+            <circle class="timer-bg" cx="23" cy="23" r="20"/>
+            <circle class="timer-fg" id="timer-ring" cx="23" cy="23" r="20"/>
+          </svg>
+          <div class="timer-num-big" id="timer-num">30</div>
+        </div>
+      </div>
+    </div>
+    <div class="question-body" id="question-body">
+      <div class="question-card anim-pop" id="question-card">
+        <div class="q-number" id="q-number">Pergunta</div>
+        <div class="q-text" id="q-text"></div>
+        <div class="choices" id="choices"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE BÔNUS/ÔNUS (BONUS/MALUS) -->
+  <div id="screen-bonus" class="screen">
+    <div class="bonus-card" id="bonus-card"></div>
+  </div>
+
+  <!-- TELA DE RANKING -->
+  <div id="screen-ranking" class="screen">
+    <div class="ranking-header">
+      <div class="ranking-title">🏆 Ranking</div>
+      <div class="ranking-sub" id="ranking-sub">Pontuação atual dos grupos</div>
+    </div>
+    <div class="ranking-list" id="ranking-list"></div>
+    <div class="ranking-btns">
+      <button class="btn-board" onclick="goScreen('board')">← Tabuleiro</button>
+      <button class="btn-restart" onclick="restartGame()">🔄 Novo Jogo</button>
+    </div>
+  </div>
+
+  <!-- Link para o Script Javascript -->
+  <script src="script.js"></script>
+</body>
+</html>
